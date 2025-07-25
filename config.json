@@ -1,0 +1,44 @@
+{
+    "video_settings": {
+        "fps": 15,
+        "width": 1920,
+        "height": 1080,
+        "total_duration": 180,
+        "output_file": "output_video.mp4"
+    },
+    "performance_settings": {
+        "num_threads": 8,
+        "batch_size": 16,
+        "use_gpu": true
+    },
+    "ken_burns_settings": {
+        "zoom_start": 1.0,
+        "zoom_end": 1.25,
+        "pan_x_start": 0,
+        "pan_x_end": 80,
+        "pan_y_start": 0,
+        "pan_y_end": 50
+    },
+    "subtitle_settings": {
+        "font_family": "C:/Windows/Fonts/msyh.ttc",
+        "font_size": 80,
+        "font_color": [255, 255, 255],
+        "stroke_width": 2,
+        "stroke_color": [0, 0, 0],
+        "position": "bottom",
+        "line_height": 70,
+        "margin_bottom": 200,
+        "margin_horizontal": 100,
+        "max_chars_per_line": 16,
+        "position_ratio": 0.67,
+        "text_color": [255, 255, 255, 255],
+        "scroll_effect": true,
+        "scroll_duration": 2.0
+    },
+    "paths": {
+        "demo_folder": "demo",
+        "images_folder": "demo/images",
+        "audios_folder": "demo/audios",
+        "captions_file": "demo/caption.json"
+    }
+}
