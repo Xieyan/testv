@@ -438,14 +438,17 @@ def main():
     processor = SubtitleProcessor("config.json")
     
     # 加载字幕数据
-    with open('assets/caption.json', 'r', encoding='utf-8') as f:
+    shot = "shot_01"  # 默认处理shot_01
+    caption_file = f'assets/{shot}/subtitles/{shot}_caption.json'
+    
+    with open(caption_file, 'r', encoding='utf-8') as f:
         captions = json.load(f)
     
     # 处理第一条字幕
     if captions and len(captions) > 0:
         first_caption = captions[0]
-        audio_path = "assets/audios/01.wav"
-        output_rst = "assets/subtitles/shot_01.rst"
+        audio_path = f"assets/{shot}/audios/{shot}_1.wav"
+        output_rst = f"assets/{shot}/subtitles/{shot}_1.rst"
         
         # 确保输出目录存在
         os.makedirs(os.path.dirname(output_rst), exist_ok=True)
