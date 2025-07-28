@@ -44,7 +44,6 @@ class KenBurnsEffect:
     ZOOM_PAN_UP = "zoom_pan_up"       # 缩放+上移
     ZOOM_PAN_DOWN = "zoom_pan_down"   # 缩放+下移
     ROTATE_ZOOM = "rotate_zoom"       # 旋转+缩放
-    SPIRAL = "spiral"                 # 螺旋效果
 
 # 预定义的特效序列（确保视觉多样性）
 EFFECT_SEQUENCE = [
@@ -55,7 +54,6 @@ EFFECT_SEQUENCE = [
     KenBurnsEffect.ZOOM_OUT,
     KenBurnsEffect.PAN_DOWN,
     KenBurnsEffect.ZOOM_PAN_LEFT,
-    KenBurnsEffect.SPIRAL,
     KenBurnsEffect.PAN_RIGHT,
     KenBurnsEffect.ZOOM_PAN_UP,
     KenBurnsEffect.ROTATE_ZOOM,
@@ -174,26 +172,24 @@ def apply_ken_burns_effect(img: np.ndarray, progress: float, effect_type: str,
         return apply_zoom_pan_down(img, eased_progress, width, height)
     elif effect_type == KenBurnsEffect.ROTATE_ZOOM:
         return apply_rotate_zoom(img, eased_progress, width, height)
-    elif effect_type == KenBurnsEffect.SPIRAL:
-        return apply_spiral(img, eased_progress, width, height)
     else:
         # 默认缩放效果
         return apply_zoom_in(img, eased_progress, width, height)
 
 
 def easing_function(t: float) -> float:
-    """缓动函数，使运动更自然"""
-    # 使用ease-in-out cubic函数
+    """缓动函数，使运动更自然（1倍速度）"""
+    # 使用更缓慢的ease-in-out函数，减少运动幅度
     if t < 0.5:
-        return 4 * t * t * t
+        return 2 * t * t
     else:
-        return 1 - pow(-2 * t + 2, 3) / 2
+        return 1 - pow(-2 * t + 2, 2) / 2
 
 
 def apply_zoom_in(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """缩放放大效果"""
+    """缩放放大效果（1倍速度）"""
     zoom_start = 1.0
-    zoom_end = 1.3  # 增加缩放幅度
+    zoom_end = 1.15  # 减少缩放幅度
     current_zoom = zoom_start + (zoom_end - zoom_start) * progress
     
     zoom_height = int(height * current_zoom)
@@ -207,8 +203,8 @@ def apply_zoom_in(img: np.ndarray, progress: float, width: int, height: int) -> 
 
 
 def apply_zoom_out(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """缩放缩小效果"""
-    zoom_start = 1.3
+    """缩放缩小效果（1倍速度）"""
+    zoom_start = 1.15  # 对应zoom_in的结束值
     zoom_end = 1.0
     current_zoom = zoom_start + (zoom_end - zoom_start) * progress
     
@@ -222,9 +218,9 @@ def apply_zoom_out(img: np.ndarray, progress: float, width: int, height: int) ->
 
 
 def apply_pan_left(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """向左平移效果"""
-    pan_distance = int(width * 0.3)  # 30%的宽度
-    zoom_factor = 1.2  # 轻微放大以确保覆盖
+    """向左平移效果（1倍速度）"""
+    pan_distance = int(width * 0.2)  # 减少平移距离
+    zoom_factor = 1.1  # 减少放大倍数
     
     zoom_width = int(width * zoom_factor)
     zoom_height = int(height * zoom_factor)
@@ -239,9 +235,9 @@ def apply_pan_left(img: np.ndarray, progress: float, width: int, height: int) ->
 
 
 def apply_pan_right(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """向右平移效果"""
-    pan_distance = int(width * 0.3)
-    zoom_factor = 1.2
+    """向右平移效果（1倍速度）"""
+    pan_distance = int(width * 0.2)  # 减少平移距离
+    zoom_factor = 1.1  # 减少放大倍数
     
     zoom_width = int(width * zoom_factor)
     zoom_height = int(height * zoom_factor)
@@ -255,9 +251,9 @@ def apply_pan_right(img: np.ndarray, progress: float, width: int, height: int) -
 
 
 def apply_pan_up(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """向上平移效果"""
-    pan_distance = int(height * 0.3)
-    zoom_factor = 1.2
+    """向上平移效果（1倍速度）"""
+    pan_distance = int(height * 0.2)  # 减少平移距离
+    zoom_factor = 1.1  # 减少放大倍数
     
     zoom_width = int(width * zoom_factor)
     zoom_height = int(height * zoom_factor)
@@ -271,9 +267,9 @@ def apply_pan_up(img: np.ndarray, progress: float, width: int, height: int) -> n
 
 
 def apply_pan_down(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """向下平移效果"""
-    pan_distance = int(height * 0.3)
-    zoom_factor = 1.2
+    """向下平移效果（1倍速度）"""
+    pan_distance = int(height * 0.2)  # 减少平移距离
+    zoom_factor = 1.1  # 减少放大倍数
     
     zoom_width = int(width * zoom_factor)
     zoom_height = int(height * zoom_factor)
@@ -287,12 +283,12 @@ def apply_pan_down(img: np.ndarray, progress: float, width: int, height: int) ->
 
 
 def apply_zoom_pan_left(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """缩放+左移组合效果"""
+    """缩放+左移组合效果（1倍速度）"""
     zoom_start = 1.0
-    zoom_end = 1.25
+    zoom_end = 1.15  # 减少缩放幅度
     current_zoom = zoom_start + (zoom_end - zoom_start) * progress
     
-    pan_distance = int(width * 0.2)
+    pan_distance = int(width * 0.15)  # 减少平移距离
     
     zoom_width = int(width * current_zoom)
     zoom_height = int(height * current_zoom)
@@ -306,12 +302,12 @@ def apply_zoom_pan_left(img: np.ndarray, progress: float, width: int, height: in
 
 
 def apply_zoom_pan_right(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """缩放+右移组合效果"""
+    """缩放+右移组合效果（1倍速度）"""
     zoom_start = 1.0
-    zoom_end = 1.25
+    zoom_end = 1.15  # 减少缩放幅度
     current_zoom = zoom_start + (zoom_end - zoom_start) * progress
     
-    pan_distance = int(width * 0.2)
+    pan_distance = int(width * 0.15)  # 减少平移距离
     
     zoom_width = int(width * current_zoom)
     zoom_height = int(height * current_zoom)
@@ -325,12 +321,12 @@ def apply_zoom_pan_right(img: np.ndarray, progress: float, width: int, height: i
 
 
 def apply_zoom_pan_up(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """缩放+上移组合效果"""
+    """缩放+上移组合效果（1倍速度）"""
     zoom_start = 1.0
-    zoom_end = 1.25
+    zoom_end = 1.15  # 减少缩放幅度
     current_zoom = zoom_start + (zoom_end - zoom_start) * progress
     
-    pan_distance = int(height * 0.2)
+    pan_distance = int(height * 0.15)  # 减少平移距离
     
     zoom_width = int(width * current_zoom)
     zoom_height = int(height * current_zoom)
@@ -344,12 +340,12 @@ def apply_zoom_pan_up(img: np.ndarray, progress: float, width: int, height: int)
 
 
 def apply_zoom_pan_down(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """缩放+下移组合效果"""
+    """缩放+下移组合效果（1倍速度）"""
     zoom_start = 1.0
-    zoom_end = 1.25
+    zoom_end = 1.15  # 减少缩放幅度
     current_zoom = zoom_start + (zoom_end - zoom_start) * progress
     
-    pan_distance = int(height * 0.2)
+    pan_distance = int(height * 0.15)  # 减少平移距离
     
     zoom_width = int(width * current_zoom)
     zoom_height = int(height * current_zoom)
@@ -363,13 +359,13 @@ def apply_zoom_pan_down(img: np.ndarray, progress: float, width: int, height: in
 
 
 def apply_rotate_zoom(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """旋转+缩放效果"""
-    zoom_start = 1.1
-    zoom_end = 1.3
+    """旋转+缩放效果（1倍速度）"""
+    zoom_start = 1.0
+    zoom_end = 1.15  # 减少缩放幅度
     current_zoom = zoom_start + (zoom_end - zoom_start) * progress
     
-    # 旋转角度（±3度）
-    rotation_angle = math.sin(progress * math.pi) * 3
+    # 旋转角度（±2度，减少旋转幅度）
+    rotation_angle = math.sin(progress * math.pi) * 2
     
     # 创建更大的画布进行旋转
     canvas_size = int(max(width, height) * current_zoom * 1.5)
@@ -394,51 +390,6 @@ def apply_rotate_zoom(img: np.ndarray, progress: float, width: int, height: int)
     final_start_y = (canvas_size - height) // 2
     final_start_x = (canvas_size - width) // 2
     return rotated[final_start_y:final_start_y+height, final_start_x:final_start_x+width]
-
-
-def apply_spiral(img: np.ndarray, progress: float, width: int, height: int) -> np.ndarray:
-    """螺旋效果（缩放+旋转+轻微平移）"""
-    zoom_start = 1.0
-    zoom_end = 1.4
-    current_zoom = zoom_start + (zoom_end - zoom_start) * progress
-    
-    # 螺旋运动
-    angle = progress * math.pi * 2  # 完整圆周
-    spiral_radius = min(width, height) * 0.1 * progress  # 螺旋半径
-    
-    pan_x = int(math.cos(angle) * spiral_radius)
-    pan_y = int(math.sin(angle) * spiral_radius)
-    
-    # 缩放
-    zoom_width = int(width * current_zoom)
-    zoom_height = int(height * current_zoom)
-    zoomed_img = cv2.resize(img, (zoom_width, zoom_height))
-    
-    # 计算起始位置（加上螺旋偏移）
-    start_x = (zoom_width - width) // 2 + pan_x
-    start_y = (zoom_height - height) // 2 + pan_y
-    
-    # 确保不越界
-    start_x = max(0, min(start_x, zoom_width - width))
-    start_y = max(0, min(start_y, zoom_height - height))
-    
-    return zoomed_img[start_y:start_y+height, start_x:start_x+width]
-    """获取缓存的图像"""
-    with image_cache_lock:
-        if image_path in image_cache:
-            return image_cache[image_path].copy()  # 返回副本避免多线程冲突
-    
-    # 如果缓存中没有，现场加载
-    img = cv2.imread(image_path)
-    if img is None:
-        img = np.zeros((height, width, 3), dtype=np.uint8)
-    else:
-        img = cv2.resize(img, (width, height))
-    
-    with image_cache_lock:
-        image_cache[image_path] = img
-    
-    return img.copy()
 
 
 def get_cached_image(shot: str, scene_number: int, width: int, height: int) -> np.ndarray:
@@ -667,7 +618,7 @@ def create_complete_video(shot="shot_02"):
     total_duration = max(seg['end_time'] for seg in all_segments) if all_segments else 0
     scene_count = len(set(seg['scene'] for seg in all_segments))
     print(f"视频总时长: {total_duration:.2f}s，字幕片段: {len(all_segments)}个")
-    print(f"Ken Burns特效: {scene_count}个场景，2倍速度，多样化效果")
+    print(f"Ken Burns特效: {scene_count}个场景，1倍速度，自然效果")
     
     # 视频参数
     fps = config['video_settings']['fps']
@@ -828,7 +779,7 @@ def create_complete_video(shot="shot_02"):
             final_video = video_clip.with_audio(final_audio)
             
             # 直接保存最终视频
-            final_output_path = f"videos/{shot}_complete_video_with_audio.mp4"
+            final_output_path = f"videos/{shot}.mp4"
             os.makedirs("videos", exist_ok=True)
             
             print("开始写入最终视频文件...")
@@ -869,7 +820,7 @@ def create_complete_video(shot="shot_02"):
             traceback.print_exc()
     else:
         print("没有音频内容，创建无声视频")
-        final_output_path = f"videos/{shot}_complete_video.mp4"
+        final_output_path = f"videos/{shot}.mp4"
         os.makedirs("videos", exist_ok=True)
         
         video_clip.write_videofile(
